@@ -1,9 +1,8 @@
-package main
+package settings
 
 import (
 	"fmt"
 	"log"
-	"net"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -36,33 +35,5 @@ func getEnv(key string, defaultVal string) string {
 func init() {
 	if err := godotenv.Load(); err != nil {
 		log.Print("No .env file found")
-	}
-}
-
-func main() {
-	address := readFromEnv().toString()
-	connection, err := net.Dial("tcp", address)
-	if err != nil {
-		log.Panic("Couldn't connect to server: ", err)
-	}
-	defer connection.Close()
-
-	for {
-		for {
-			input := make([]byte, 1024)
-			n, err := connection.Read(input)
-
-			if err != nil {
-				log.Print("Couldn't read from server: ", err)
-			}
-			fmt.Printf("Server: %s\n", string(input[:n]))
-
-			if n == 0 {
-				break
-			}
-		}
-		var answer string
-		fmt.Scan(&answer)
-		connection.Write([]byte(answer))
 	}
 }
